@@ -6,7 +6,9 @@ import {
   Inter_600SemiBold,
 } from "@expo-google-fonts/inter";
 
-import { AppView, StyledText } from "./styles";
+import ManageProducts from "./src/pages/ManageProducts";
+
+import { AppView } from "./styles";
 
 export default function App() {
   const [loaded] = useFonts({
@@ -22,7 +24,7 @@ export default function App() {
 
   return (
     <AppView>
-      <StyledText>Open up App.tsx to start working on your app!</StyledText>
+      <ManageProducts />
     </AppView>
   );
 }

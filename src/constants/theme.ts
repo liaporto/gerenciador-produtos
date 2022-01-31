@@ -13,5 +13,15 @@ export const defaultTheme = {
     white: '#FFFFFF',
     black: '#000000',
     red: '#DC2A2A'
+  },
+  input: {
+    borderRadius: 10,
+    height: 50,
+    padding: '0 15px',
+    boxShadow: "0px 1px 10px rgba(0, 0, 0, 0.1)"
+  },
+  card: {
+    borderRadius: 5,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.12)"
   }
 }
