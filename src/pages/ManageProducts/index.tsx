@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
-import { Product } from "../../../interfaces";
-import { products } from "../../utils/mocks/productMock";
-import {
-  MainContainer,
-  Separator,
-  StyledFlatList,
-  StyledSubtitle,
-} from "../../../styles";
+import React, { useEffect, useState } from "react";
+import { Separator, StyledFlatList, StyledSubtitle } from "../../../styles";
 import Button from "../../components/Button";
 import ProductCard from "../../components/ProductCard";
 import TextInput from "../../components/TextInput";
@@ -20,17 +12,37 @@ import {
   ProductListContainer,
   SearchInputContainer,
 } from "./styles";
+import { useProduct } from "../../contexts/product";
 
 const ManageProducts = () => {
+  const { products, getAllProducts, saveProduct, removeProduct } = useProduct();
+
+  const [productList, setProductList] = useState<Product[]>(products);
   const [activeSort, setActiveSort] = useState("id");
 
   const renderItem = ({ item }: any) => {
     return <ProductCard product={item} />;
   };
 
+  const handleRegisterItem = () => {
+    saveProduct({
+      id: 0,
+      name: "Produto 24",
+      quantity: 2,
+      unitPrice: 5,
+      totalValue: 5 * 2,
+    })
+      .then(() => console.log("Produto registrado"))
+      .catch((err: any) => console.log(err));
+  };
+
   const handleSort = (id: string) => {
     setActiveSort(id);
   };
+
+  useEffect(() => {
+    setProductList(products);
+  }, [products]);
 
   const renderTopPortionOfPage = () => {
     return (
@@ -57,7 +69,10 @@ const ManageProducts = () => {
               <TextInput keyboardType="numeric" placeholder="Valor unitário" />
             </InputControl>
           </InputsContainer>
-          <Button label="Cadastrar produto" />
+          <Button
+            label="Cadastrar produto"
+            onPress={() => handleRegisterItem()}
+          />
         </AddProductForm>
         <Separator />
         <ProductListContainer>
@@ -101,7 +116,7 @@ const ManageProducts = () => {
   return (
     <StyledFlatList
       ListHeaderComponent={renderTopPortionOfPage}
-      data={products}
+      data={productList}
       renderItem={renderItem}
       keyExtractor={(item: Product) => item.id.toString()}
     />

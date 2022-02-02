@@ -8,6 +8,8 @@ import {
 
 import ManageProducts from "./src/pages/ManageProducts";
 
+import ProductProvider from "./src/contexts/product";
+
 import { AppView } from "./styles";
 
 export default function App() {
@@ -23,8 +25,10 @@ export default function App() {
   }
 
   return (
-    <AppView>
-      <ManageProducts />
-    </AppView>
+    <ProductProvider>
+      <AppView>
+        <ManageProducts />
+      </AppView>
+    </ProductProvider>
   );
 }
