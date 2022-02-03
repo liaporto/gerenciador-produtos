@@ -3,6 +3,10 @@ export const formatCurrency = (value:number):string => {
   return value.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
 }
 
+export const getRawCurrency = (formattedText:string):number => {
+  return parseFloat(formattedText.replace(/(R\$|\.)/g, "").replace(",", "."));
+}
+
 export const formatId = (id:number):string => {
   return `${id}`.padStart(3, "0");
 }

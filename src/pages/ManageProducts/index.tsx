@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Separator, StyledFlatList, StyledSubtitle } from "../../../styles";
+import {
+  Error,
+  Separator,
+  StyledFlatList,
+  StyledSubtitle,
+} from "../../../styles";
 import Button from "../../components/Button";
 import ProductCard from "../../components/ProductCard";
 import TextInput from "../../components/TextInput";
@@ -14,26 +19,54 @@ import {
 } from "./styles";
 import { useProduct } from "../../contexts/product";
 
+import { TextInputMask } from "react-native-masked-text";
+import { useForm, Controller } from "react-hook-form";
+import { getRawCurrency } from "../../utils/utils";
+
+interface RegisterData {
+  name: string;
+  quantity: string;
+  unitPrice: string;
+}
+
 const ManageProducts = () => {
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({ mode: "onTouched" });
+
   const { products, getAllProducts, saveProduct, removeProduct } = useProduct();
 
   const [productList, setProductList] = useState<Product[]>(products);
   const [activeSort, setActiveSort] = useState("id");
 
+  const [unitValue, setUnitValue] = useState("0");
+
   const renderItem = ({ item }: any) => {
     return <ProductCard product={item} />;
   };
 
-  const handleRegisterItem = () => {
-    saveProduct({
-      id: 0,
-      name: "Produto 24",
-      quantity: 2,
-      unitPrice: 5,
-      totalValue: 5 * 2,
-    })
+  const onSubmit = (data: any) => {
+    const convertedPrice = getRawCurrency(data.unitPrice);
+    const convertedQuantity = parseInt(data.quantity);
+
+    const product = {
+      ...data,
+      quantity: convertedQuantity,
+      unitPrice: convertedPrice,
+      totalValue: convertedQuantity * convertedPrice,
+    };
+
+    saveProduct(product)
       .then(() => console.log("Produto registrado"))
       .catch((err: any) => console.log(err));
+  };
+
+  const onError = (err: any) => {
+    console.log("Algo deu errado");
+    console.log(err);
   };
 
   const handleSort = (id: string) => {
@@ -57,21 +90,90 @@ const ManageProducts = () => {
           <StyledSubtitle>Adicione um novo produto</StyledSubtitle>
           <InputsContainer>
             <InputControl>
-              <TextInput placeholder="Nome" />
-            </InputControl>
-            <InputControl>
-              <TextInput
-                keyboardType="numeric"
-                placeholder="Quantidade em estoque"
+              <Controller
+                control={control}
+                name="name"
+                defaultValue=""
+                render={({
+                  field: { onBlur, onChange, value, ref },
+                  fieldState: { isTouched },
+                }) => (
+                  <TextInput
+                    placeholder="Nome"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={(value: any) => onChange(value)}
+                  />
+                )}
+                rules={{
+                  required: "O nome do produto é obrigatório.",
+                }}
               />
+              {errors.name && <Error>{errors.name.message}</Error>}
             </InputControl>
             <InputControl>
-              <TextInput keyboardType="numeric" placeholder="Valor unitário" />
+              <Controller //TODO: Resolver problema com o foco
+                control={control}
+                name="quantity"
+                defaultValue=""
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInput
+                    keyboardType="numeric"
+                    placeholder="Quantidade em estoque"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={(value: any) => onChange(value)}
+                  />
+                )}
+                rules={{
+                  required: "A quantidade em estoque é obrigatória.",
+                  min: 1,
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Por favor insira apenas números.",
+                  },
+                }}
+              />
+              {errors.quantity &&
+                (errors.quantity.type === "min" ? (
+                  <Error>A quantidade mínima é de 1 (um) produto.</Error>
+                ) : (
+                  <Error>{errors.quantity.message}</Error>
+                ))}
+            </InputControl>
+            <InputControl>
+              <Controller
+                control={control}
+                name="unitPrice"
+                defaultValue=""
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInputMask //TODO: Resolver o problema de ref
+                    value={value}
+                    onBlur={onBlur}
+                    includeRawValueInChangeText={true}
+                    onChangeText={(value: any) => {
+                      onChange(value);
+                    }}
+                    type={"money"}
+                    customTextInput={TextInput}
+                    customTextInputProps={{
+                      keyboardType: "numeric",
+                      placeholder: "Valor unitário",
+                      value: value,
+                      onChangeText: onChange,
+                    }}
+                  />
+                )}
+                rules={{
+                  required: "O valor unitário é obrigatório.",
+                }}
+              />
+              {errors.unitPrice && <Error>{errors.unitPrice.message}</Error>}
             </InputControl>
           </InputsContainer>
           <Button
             label="Cadastrar produto"
-            onPress={() => handleRegisterItem()}
+            onPress={handleSubmit(onSubmit, onError)}
           />
         </AddProductForm>
         <Separator />

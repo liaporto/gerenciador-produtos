@@ -46,3 +46,7 @@ export const StyledSubtitle = styled.Text`
   font-size: 20px;
   font-family: Inter_600SemiBold;
 `;
+
+export const Error = styled(StyledText)`
+  color: ${defaultTheme.colors.red};
+`;

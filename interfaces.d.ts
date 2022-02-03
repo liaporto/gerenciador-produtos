@@ -5,3 +5,10 @@ interface Product {
   unitPrice: number;
   totalValue: number;
 }
+
+interface FormRegisteredProduct {
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  totalValue: number;
+}

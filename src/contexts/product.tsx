@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 interface ProductContextProps {
   products: Product[];
   getAllProducts: () => any;
-  saveProduct: (product: Product) => any;
+  saveProduct: (product: FormRegisteredProduct) => any;
   removeProduct: (productId: number) => any;
 }
 
@@ -28,7 +28,7 @@ const ProductProvider = (props: any) => {
     }
   };
 
-  const saveProduct = async (product: Product) => {
+  const saveProduct = async (product: FormRegisteredProduct) => {
     try {
       const productsString = await getAllProducts();
 
@@ -76,6 +76,14 @@ const ProductProvider = (props: any) => {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const removeAllData = async () => {
+    try {
+      AsyncStorage.removeItem(STORAGE_KEY);
+    } catch (err) {
+      throw new Error();
     }
   };
 
