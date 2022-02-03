@@ -33,16 +33,14 @@ const ManageProducts = () => {
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({ mode: "onTouched" });
 
-  const { products, getAllProducts, saveProduct, removeProduct } = useProduct();
+  const { products, getAllProducts, createProduct, removeProduct } =
+    useProduct();
 
   const [productList, setProductList] = useState<Product[]>(products);
   const [activeSort, setActiveSort] = useState("id");
-
-  const [unitValue, setUnitValue] = useState("0");
 
   const renderItem = ({ item }: any) => {
     return <ProductCard product={item} />;
@@ -59,7 +57,7 @@ const ManageProducts = () => {
       totalValue: convertedQuantity * convertedPrice,
     };
 
-    saveProduct(product)
+    createProduct(product)
       .then(() => console.log("Produto registrado"))
       .catch((err: any) => console.log(err));
   };
@@ -94,10 +92,7 @@ const ManageProducts = () => {
                 control={control}
                 name="name"
                 defaultValue=""
-                render={({
-                  field: { onBlur, onChange, value, ref },
-                  fieldState: { isTouched },
-                }) => (
+                render={({ field: { onBlur, onChange, value } }) => (
                   <TextInput
                     placeholder="Nome"
                     value={value}

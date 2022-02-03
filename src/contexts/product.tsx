@@ -4,8 +4,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 interface ProductContextProps {
   products: Product[];
   getAllProducts: () => any;
-  saveProduct: (product: FormRegisteredProduct) => any;
-  removeProduct: (productId: number) => any;
+  createProduct: (product: FormRegisteredProduct) => Promise<void>;
+  removeProduct: (productId: number) => Promise<void>;
 }
 
 const STORAGE_KEY = "@products";
@@ -28,7 +28,7 @@ const ProductProvider = (props: any) => {
     }
   };
 
-  const saveProduct = async (product: FormRegisteredProduct) => {
+  const createProduct = async (product: FormRegisteredProduct) => {
     try {
       const productsString = await getAllProducts();
 
@@ -124,7 +124,7 @@ const ProductProvider = (props: any) => {
       value={{
         products,
         getAllProducts,
-        saveProduct,
+        createProduct,
         removeProduct,
       }}
     >
