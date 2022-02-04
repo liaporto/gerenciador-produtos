@@ -1,4 +1,8 @@
-interface Product {
+interface IProduct {
+  [key: string]: string | number;
+}
+
+interface Product extends IProduct {
   id: number;
   name: string;
   quantity: number;
