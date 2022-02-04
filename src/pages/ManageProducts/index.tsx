@@ -116,7 +116,7 @@ const ManageProducts = () => {
               {errors.name && <Error>{errors.name.message}</Error>}
             </InputControl>
             <InputControl>
-              <Controller //TODO: Resolver problema com o foco
+              <Controller
                 control={control}
                 name="quantity"
                 defaultValue=""
@@ -221,7 +221,9 @@ const ManageProducts = () => {
 
   return (
     <StyledFlatList
-      ListHeaderComponent={renderTopPortionOfPage}
+      keyboardShouldPersistTaps={"handled"}
+      keyboardDismissMode="interactive"
+      ListHeaderComponent={renderTopPortionOfPage()}
       data={productList}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
