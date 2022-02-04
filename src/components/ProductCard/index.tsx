@@ -100,4 +100,11 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+function arePropsEqual(
+  prevProps: ProductCardProps,
+  nextProps: ProductCardProps
+) {
+  return prevProps.product === nextProps.product;
+}
+
+export default React.memo(ProductCard, arePropsEqual);
