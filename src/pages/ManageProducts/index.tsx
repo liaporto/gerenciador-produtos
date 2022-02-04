@@ -22,6 +22,7 @@ import { useProduct } from "../../contexts/product";
 import { TextInputMask } from "react-native-masked-text";
 import { useForm, Controller } from "react-hook-form";
 import { getRawCurrency } from "../../utils/utils";
+import { View } from "react-native";
 
 interface RegisterData {
   name: string;
@@ -36,14 +37,20 @@ const ManageProducts = () => {
     formState: { errors },
   } = useForm({ mode: "onTouched" });
 
-  const { products, getAllProducts, createProduct, removeProduct } =
+  const { products, createProduct, removeProduct, updateProduct } =
     useProduct();
 
   const [productList, setProductList] = useState<Product[]>(products);
   const [activeSort, setActiveSort] = useState("id");
 
   const renderItem = ({ item }: any) => {
-    return <ProductCard product={item} />;
+    return (
+      <ProductCard
+        product={item}
+        updateProduct={updateProduct}
+        removeProduct={removeProduct}
+      />
+    );
   };
 
   const onSubmit = (data: any) => {
@@ -67,6 +74,8 @@ const ManageProducts = () => {
     console.log(err);
   };
 
+  const keyExtractor = (item: Product) => item.id.toString();
+
   const handleSort = (id: string) => {
     setActiveSort(id);
   };
@@ -77,7 +86,7 @@ const ManageProducts = () => {
 
   const renderTopPortionOfPage = () => {
     return (
-      <>
+      <View>
         <SearchInputContainer>
           <TextInput
             placeholder="Pesquise por um produto cadastrado"
@@ -206,7 +215,7 @@ const ManageProducts = () => {
             />
           </BadgesContainer>
         </ProductListContainer>
-      </>
+      </View>
     );
   };
 
@@ -215,7 +224,7 @@ const ManageProducts = () => {
       ListHeaderComponent={renderTopPortionOfPage}
       data={productList}
       renderItem={renderItem}
-      keyExtractor={(item: Product) => item.id.toString()}
+      keyExtractor={keyExtractor}
     />
   );
 };

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { Product } from "../../../interfaces";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import { defaultTheme } from "../../constants/theme";
@@ -13,14 +12,23 @@ import {
   QuantityLabel,
   QuantitySpinnerContainer,
 } from "./styles";
-import { formatCurrency, formatId } from "../../utils/utils";
 import Spinner from "../Spinner";
+import { formatCurrency, formatId } from "../../utils/utils";
 
 interface ProductCardProps {
   product: Product;
+  removeProduct: (productId: number) => Promise<void>;
+  updateProduct: (alteredProduct: Product, productId: number) => any;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({
+  product,
+  updateProduct,
+  removeProduct,
+}: ProductCardProps) => {
+  const [id, setId] = useState(product.id);
+  const [name, setName] = useState(product.name);
+  const [unitPrice, setUnitPrice] = useState(product.unitPrice);
   const [quantity, setQuantity] = useState(product.quantity);
   const [totalValue, setTotalValue] = useState(product.totalValue);
 
@@ -32,7 +40,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     } else {
-      //TODO: Lógica para deletar o produto
+      removeProduct(id);
     }
   };
 
@@ -41,29 +49,41 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   const handleDelete = () => {
-    //TODO: Lógica para deletar o produto
+    removeProduct(id);
   };
 
-  useEffect(() => {
+  const handleUpdate = () => {
     if (quantity === 0) {
       handleDelete();
     }
 
     setTotalValue(quantity * product.unitPrice);
+
+    const alteredProduct = {
+      ...product,
+      quantity: quantity,
+      totalValue: totalValue,
+    };
+
+    updateProduct(alteredProduct, product.id);
+  };
+
+  useEffect(() => {
+    handleUpdate();
   }, [quantity]);
 
   return (
     <Card>
       <Header>
-        <IdNumber>N°{formatId(product.id)}</IdNumber>
+        <IdNumber>N°{formatId(id)}</IdNumber>
         <TouchableOpacity onPress={handleDelete}>
           <Icon name="delete" size={18} color={defaultTheme.colors.red} />
         </TouchableOpacity>
       </Header>
       <View>
-        <ProductName>{product.name}</ProductName>
+        <ProductName>{name}</ProductName>
         <ProductInfo>
-          Valor unitário: R$ {formatCurrency(product.unitPrice)}
+          Valor unitário: R$ {formatCurrency(unitPrice)}
         </ProductInfo>
         <ProductInfo>Valor total: R$ {formatCurrency(totalValue)}</ProductInfo>
         <QuantitySpinnerContainer>

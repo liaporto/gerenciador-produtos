@@ -4,8 +4,10 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 interface ProductContextProps {
   products: Product[];
   getAllProducts: () => any;
+  findProduct: (productId: number) => Promise<Product>;
   createProduct: (product: FormRegisteredProduct) => Promise<void>;
   removeProduct: (productId: number) => Promise<void>;
+  updateProduct: (alteredProduct: Product, productId: number) => Promise<void>;
 }
 
 const STORAGE_KEY = "@products";
@@ -28,28 +30,59 @@ const ProductProvider = (props: any) => {
     }
   };
 
+  const findProduct = async (productId: number) => {
+    try {
+      const products = await getAllProducts();
+      if (products) {
+        return JSON.parse(products).find(
+          (item: Product) => item.id === productId
+        );
+      } else {
+        throw new Error("Não foi possível resgatar produtos");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const createProduct = async (product: FormRegisteredProduct) => {
+    try {
+      const productArray = products.sort((a, b) => a.id - b.id);
+
+      let usableId = productArray.length + 1;
+
+      for (let i = 1; i <= productArray.length; i++) {
+        if (i !== productArray[i - 1].id) {
+          usableId = i;
+          break;
+        }
+      }
+
+      const sanitizedProduct = {
+        ...product,
+        id: usableId,
+      };
+
+      setProducts([...products, sanitizedProduct]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateProduct = async (alteredProduct: Product, productId: number) => {
     try {
       const productsString = await getAllProducts();
 
       if (productsString) {
         const products = JSON.parse(productsString);
 
-        let usableId = products.length + 1;
-
-        for (let i = 1; i <= products.length; i++) {
-          if (i !== products[i - 1].id) {
-            usableId = i;
-            break;
+        const newProducts = products.map((item: Product) => {
+          if (productId === item.id) {
+            return alteredProduct;
+          } else {
+            return item;
           }
-        }
-
-        const sanitizedProduct = {
-          ...product,
-          id: usableId,
-        };
-
-        const newProducts = [...products, sanitizedProduct];
+        });
 
         setProducts(newProducts);
       } else {
@@ -83,7 +116,7 @@ const ProductProvider = (props: any) => {
     try {
       AsyncStorage.removeItem(STORAGE_KEY);
     } catch (err) {
-      throw new Error();
+      console.log(err);
     }
   };
 
@@ -91,7 +124,7 @@ const ProductProvider = (props: any) => {
     try {
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(products));
     } catch (err) {
-      throw new Error();
+      console.log(err);
     }
   };
 
@@ -124,8 +157,10 @@ const ProductProvider = (props: any) => {
       value={{
         products,
         getAllProducts,
+        findProduct,
         createProduct,
         removeProduct,
+        updateProduct,
       }}
     >
       {props.children}
