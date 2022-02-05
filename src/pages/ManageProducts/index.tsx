@@ -80,18 +80,16 @@ const ManageProducts = () => {
     setActiveSort(id);
   };
 
-  const sortItems = (list: Product[]) => {
-    return list.sort((a, b) => {
-      if (activeSort === "id") {
-        return a.id - b.id;
-      }
+  const sortByActiveProperty = (a: Product, b: Product) => {
+    if (activeSort === "id") {
+      return a.id - b.id;
+    }
 
-      if (typeof a[activeSort] === "string") {
-        return a.name.localeCompare(b.name);
-      }
+    if (typeof a[activeSort] === "string") {
+      return a.name.localeCompare(b.name);
+    }
 
-      return (b[activeSort] as number) - (a[activeSort] as number);
-    });
+    return (b[activeSort] as number) - (a[activeSort] as number);
   };
 
   useEffect(() => {
@@ -238,7 +236,7 @@ const ManageProducts = () => {
       keyboardShouldPersistTaps={"handled"}
       keyboardDismissMode="interactive"
       ListHeaderComponent={renderTopPortionOfPage()}
-      data={sortItems(productList)}
+      data={productList.sort(sortByActiveProperty)}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
     />
