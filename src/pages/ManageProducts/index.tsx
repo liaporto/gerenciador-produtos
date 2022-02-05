@@ -22,7 +22,11 @@ import { useProduct } from "../../contexts/product";
 import { TextInputMask } from "react-native-masked-text";
 import { useForm, Controller } from "react-hook-form";
 import { getRawCurrency } from "../../utils/utils";
-import { View } from "react-native";
+import {
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
+  View,
+} from "react-native";
 
 interface RegisterData {
   name: string;
@@ -42,6 +46,7 @@ const ManageProducts = () => {
 
   const [productList, setProductList] = useState<Product[]>(products);
   const [activeSort, setActiveSort] = useState<string>("id");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const renderItem = ({ item }: any) => {
     return (
@@ -74,11 +79,16 @@ const ManageProducts = () => {
     console.log(err);
   };
 
-  const keyExtractor = (item: Product) => item.id.toString();
+  const onSearch = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+    const searchQuery = e.nativeEvent.text;
+    setSearchQuery(searchQuery);
+  };
 
   const handleSort = (id: string) => {
     setActiveSort(id);
   };
+
+  const keyExtractor = (item: Product) => item.id.toString();
 
   const sortByActiveProperty = (a: Product, b: Product) => {
     if (activeSort === "id") {
@@ -92,6 +102,10 @@ const ManageProducts = () => {
     return (b[activeSort] as number) - (a[activeSort] as number);
   };
 
+  const nameSearchFilter = (item: Product) => {
+    return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+  };
+
   useEffect(() => {
     setProductList(products);
   }, [products]);
@@ -101,6 +115,8 @@ const ManageProducts = () => {
       <View>
         <SearchInputContainer>
           <TextInput
+            value={searchQuery}
+            onChange={onSearch}
             placeholder="Pesquise por um produto cadastrado"
             isSearch
           />
@@ -236,7 +252,7 @@ const ManageProducts = () => {
       keyboardShouldPersistTaps={"handled"}
       keyboardDismissMode="interactive"
       ListHeaderComponent={renderTopPortionOfPage()}
-      data={productList.sort(sortByActiveProperty)}
+      data={productList.filter(nameSearchFilter).sort(sortByActiveProperty)}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
     />
