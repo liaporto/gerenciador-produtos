@@ -7,8 +7,9 @@ export const Card = styled.View`
   padding: 4% 4% 6%;
 
   border-radius: ${defaultTheme.card.borderRadius};
-  box-shadow: ${defaultTheme.card.boxShadow};
   background-color: ${defaultTheme.colors.white};
+  box-shadow: ${defaultTheme.card.boxShadow};
+  elevation: 2; /* Apply box-shadow on android devices */
 `;
 
 export const Header = styled.View`

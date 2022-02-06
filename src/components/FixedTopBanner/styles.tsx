@@ -16,8 +16,9 @@ export const FixedContainer = styled.View`
 
   align-self: center;
 
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.025);
   background-color: ${defaultTheme.background};
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.025);
+  elevation: 1; /* Apply box-shadow on android devices */
 
   position: ${() =>
     Platform.select({

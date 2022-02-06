@@ -11,6 +11,7 @@ export const StyledButton = styled.TouchableOpacity`
   background-color: ${defaultTheme.colors.primary};
   border-radius: ${defaultTheme.input.borderRadius};
   box-shadow: ${defaultTheme.input.boxShadow};
+  elevation: 1; /* Apply box-shadow on android devices */
 `;
 
 export const ButtonText = styled.Text`
