@@ -27,6 +27,7 @@ import { TextInputMask } from "react-native-masked-text";
 import { useForm, Controller } from "react-hook-form";
 import { getRawCurrency } from "../../utils/utils";
 import {
+  Keyboard,
   NativeSyntheticEvent,
   TextInputChangeEventData,
   View,
@@ -44,6 +45,7 @@ const ManageProducts = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({ mode: "onTouched" });
 
   const { products, createProduct, removeProduct, updateProduct } =
@@ -64,6 +66,8 @@ const ManageProducts = () => {
   };
 
   const onSubmit = (data: any) => {
+    Keyboard.dismiss();
+
     const convertedPrice = getRawCurrency(data.unitPrice);
     const convertedQuantity = parseInt(data.quantity);
 
@@ -75,7 +79,10 @@ const ManageProducts = () => {
     };
 
     createProduct(product)
-      .then(() => console.log("Produto registrado"))
+      .then(() => {
+        console.log("Produto registrado");
+        reset();
+      })
       .catch((err: any) => console.log(err));
   };
 
