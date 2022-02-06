@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
   Error,
+  MainContainer,
   Separator,
   StyledFlatList,
   StyledSubtitle,
+  StyledText,
 } from "../../../styles";
 import Button from "../../components/Button";
 import ProductCard from "../../components/ProductCard";
@@ -16,6 +18,8 @@ import {
   InputsContainer,
   ProductListContainer,
   SearchInputContainer,
+  SearchQueryContainer,
+  SearchQueryText,
 } from "./styles";
 import { useProduct } from "../../contexts/product";
 
@@ -27,6 +31,7 @@ import {
   TextInputChangeEventData,
   View,
 } from "react-native";
+import FixedTopBanner from "../../components/FixedTopBanner";
 
 interface RegisterData {
   name: string;
@@ -113,14 +118,6 @@ const ManageProducts = () => {
   const renderTopPortionOfPage = () => {
     return (
       <View>
-        <SearchInputContainer>
-          <TextInput
-            value={searchQuery}
-            onChange={onSearch}
-            placeholder="Pesquise por um produto cadastrado"
-            isSearch
-          />
-        </SearchInputContainer>
         <AddProductForm>
           <StyledSubtitle>Adicione um novo produto</StyledSubtitle>
           <InputsContainer>
@@ -248,14 +245,24 @@ const ManageProducts = () => {
   };
 
   return (
-    <StyledFlatList
-      keyboardShouldPersistTaps={"handled"}
-      keyboardDismissMode="interactive"
-      ListHeaderComponent={renderTopPortionOfPage()}
-      data={productList.filter(nameSearchFilter).sort(sortByActiveProperty)}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-    />
+    <View style={{ flex: 1 }}>
+      <StyledFlatList
+        keyboardShouldPersistTaps={"handled"}
+        keyboardDismissMode="interactive"
+        ListHeaderComponent={renderTopPortionOfPage()}
+        data={productList.filter(nameSearchFilter).sort(sortByActiveProperty)}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+      />
+      <FixedTopBanner>
+        <TextInput
+          value={searchQuery}
+          onChange={onSearch}
+          placeholder="Pesquise por um produto cadastrado"
+          isSearch
+        />
+      </FixedTopBanner>
+    </View>
   );
 };
 

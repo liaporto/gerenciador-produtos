@@ -7,9 +7,9 @@ import {
 
 import { defaultTheme } from "./src/constants/theme";
 
-export const AppView = styled.SafeAreaView`
+export const AppView = styled.View`
   flex: 1;
-  background: ${defaultTheme.background};
+  background-color: ${defaultTheme.background};
 `;
 
 export const MainContainer = styled.View`

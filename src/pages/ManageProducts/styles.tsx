@@ -1,16 +1,12 @@
 import styled from "styled-components/native";
 
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { defaultTheme } from "../../constants/theme";
+
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export const AddProductForm = styled.View`
+  margin-top: ${hp("10%")};
   margin-bottom: ${hp("2%")};
-`;
-
-export const SearchInputContainer = styled.View`
-  margin-bottom: ${hp("5%")};
 `;
 
 export const InputsContainer = styled.View`
@@ -29,6 +25,20 @@ export const BadgesContainer = styled.View`
   flex-wrap: wrap;
   align-content: space-around;
   justify-content: center;
+`;
+
+export const SearchQueryContainer = styled.View`
+  margin-top: ${hp("2%")};
+  margin-bottom: ${hp("2%")};
+
+  align-self: center;
+  align-items: center;
+`;
+
+export const SearchQueryText = styled.Text`
+  font-family: Inter_300Light;
+  font-size: 16px;
+  color: ${defaultTheme.colors.darkGray};
 `;
 
 export const ProductListContainer = styled.View`
