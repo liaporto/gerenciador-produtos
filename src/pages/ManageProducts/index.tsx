@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
   Error,
-  MainContainer,
   Separator,
   StyledFlatList,
   StyledSubtitle,
-  StyledText,
 } from "../../../styles";
 import Button from "../../components/Button";
 import ProductCard from "../../components/ProductCard";
@@ -17,9 +15,6 @@ import {
   InputControl,
   InputsContainer,
   ProductListContainer,
-  SearchInputContainer,
-  SearchQueryContainer,
-  SearchQueryText,
 } from "./styles";
 import { useProduct } from "../../contexts/product";
 
