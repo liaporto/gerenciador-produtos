@@ -2,13 +2,12 @@
 
 Protótipo de uma tela para gerenciar produtos em estoque. Na tela o usuário pode:
 
-- Adicionar um produto através de um formulário no topo da tela;
+- Adicionar um produto através de um formulário;
 - Navegar pelos produtos já adicionados, ordenando-os por id, nome, quantidade unitária, quantidade em estoque ou valor total;
-- Pesquisar por um ou mais produtos pelo nome;
-- Aumentar ou diminuir a quantidade em estoque de algum produto;
+- Pesquisar um ou mais produtos pelo nome;
+- Aumentar ou diminuir a quantidade em estoque de um produto;
 - Deletar produtos;
   
-
 ## Stack
 
 - TypeScript
