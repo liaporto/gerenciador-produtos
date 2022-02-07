@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, Platform, TouchableOpacity, View } from "react-native";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import { defaultTheme } from "../../constants/theme";
@@ -40,7 +40,7 @@ const ProductCard = ({
     if (quantity > 1) {
       setQuantity(quantity - 1);
     } else {
-      removeProduct(id);
+      handleDelete();
     }
   };
 
@@ -49,7 +49,35 @@ const ProductCard = ({
   };
 
   const handleDelete = () => {
-    removeProduct(id);
+    if (Platform.OS === "web") {
+      // const confirmDelete;
+      window.confirm("Tem certeza de que deseja apagar esse produto?") &&
+        removeProduct(id);
+    } else {
+      Alert.alert(
+        "Apagar produto",
+        "Tem certeza de que deseja apagar esse produto?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => {
+              console.log("Ação cancelada");
+            },
+            style: "cancel",
+          },
+          {
+            text: "Apagar",
+            onPress: () => {
+              removeProduct(id);
+            },
+            style: "default",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    }
   };
 
   const handleUpdate = () => {
